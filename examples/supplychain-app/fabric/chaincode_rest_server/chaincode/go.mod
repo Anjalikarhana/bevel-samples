@@ -1,6 +1,6 @@
 module github.com/chaincode
 
-go 1.22.2
+go 1.22
 
 require (
 	github.com/benbjohnson/clock v1.1.0
