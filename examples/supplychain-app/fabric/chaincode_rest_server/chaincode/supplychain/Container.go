@@ -1,10 +1,10 @@
 package supplychain
 
-
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	. "github.com/chaincode/common"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -72,7 +72,7 @@ func (s *SmartContract) createContainer(stub shim.ChaincodeStubInterface, args [
 	return shim.Success(bytes)
 }
 
-//getAllContainer retrieves all Container on the ledger
+// getAllContainer retrieves all Container on the ledger
 func (s *SmartContract) getAllContainer(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//Get user identity
 	identity, err := GetInvokerIdentity(stub)
@@ -118,7 +118,7 @@ func (s *SmartContract) getAllContainer(stub shim.ChaincodeStubInterface, args [
 	return shim.Success(buffer.Bytes())
 }
 
-//getSingleContainer retrieves single Container on the ledger by trackingID
+// getSingleContainer retrieves single Container on the ledger by trackingID
 func (s *SmartContract) getSingleContainer(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//get user identity
 	identity, err := GetInvokerIdentity(stub)
@@ -162,7 +162,7 @@ func (s *SmartContract) getSingleContainer(stub shim.ChaincodeStubInterface, arg
 	return shim.Success(containerAsBytes)
 }
 
-//updateCustodian claims current user as the custodian
+// updateCustodian claims current user as the custodian
 func (s *SmartContract) updateContainerCustodian(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//get user identity
 	identity, err := GetInvokerIdentity(stub)
@@ -229,68 +229,67 @@ func (s *SmartContract) updateContainerCustodian(stub shim.ChaincodeStubInterfac
 	//container.Location = newLocation
 	//container.Timestamp = int64(s.clock.Now().UTC().Unix())
 
-
 	//newBytes, _ := json.Marshal(container)
 	//if err := stub.PutState(trackingID, newBytes); err != nil {
 	//	return shim.Error(err.Error())
 	//}
 
 	//arguments for a container id
-    //
+	//
 
-    var recup func(Container) peer.Response
-    recup = func (container Container) peer.Response {
+	var recup func(Container) peer.Response
+	recup = func(container Container) peer.Response {
 
-        container.Custodian = newCustodian
-        container.Location = newLocation
-        container.Timestamp = int64(s.clock.Now().UTC().Unix())
+		container.Custodian = newCustodian
+		container.Location = newLocation
+		container.Timestamp = int64(s.clock.Now().UTC().Unix())
 
-            newBytes, _ := json.Marshal(container)
-            if err := stub.PutState(container.ID, newBytes); err != nil {
-                        return shim.Error(err.Error())
-            }
+		newBytes, _ := json.Marshal(container)
+		if err := stub.PutState(container.ID, newBytes); err != nil {
+			return shim.Error(err.Error())
+		}
 
-        //iterate through contents
-        for _, contentID := range container.Contents {
-            contentBytes, _ := stub.GetState(contentID)
-            if len(contentBytes) == 0 {
-                return peer.Response{
-                    Status:  404,
-                    Message: fmt.Sprintf("Content tracking id %s is invalid.", contentID),
-                }
-            }
-            var contentState Product
-            err := json.Unmarshal(contentBytes, &contentState)
-            if err != nil && err.Error() == "Not a Product" {
-                //recursivly claim custodian on containers
-                var innercontainer Container
-                    err = json.Unmarshal(contentBytes, &innercontainer)
-                    if err != nil {
-                        return shim.Error(err.Error())
-                    }
-                recup(innercontainer)
-                                                             //s.updateContainerCustodian(stub, []string{contentID, ""})
-            }else if err == nil {
-                //claim product
-                contentState.Custodian = newCustodian
-                contentState.Location = newLocation
-                contentState.Timestamp = container.Timestamp
-                newProductBytes, _ := json.Marshal(contentState)
-                if err := stub.PutState(contentID, newProductBytes); err != nil {
-                    return shim.Error(err.Error())
-                }
-            } else {
-                return shim.Error(err.Error())
-            }
-        }
+		//iterate through contents
+		for _, contentID := range container.Contents {
+			contentBytes, _ := stub.GetState(contentID)
+			if len(contentBytes) == 0 {
+				return peer.Response{
+					Status:  404,
+					Message: fmt.Sprintf("Content tracking id %s is invalid.", contentID),
+				}
+			}
+			var contentState Product
+			err := json.Unmarshal(contentBytes, &contentState)
+			if err != nil && err.Error() == "Not a Product" {
+				//recursivly claim custodian on containers
+				var innercontainer Container
+				err = json.Unmarshal(contentBytes, &innercontainer)
+				if err != nil {
+					return shim.Error(err.Error())
+				}
+				recup(innercontainer)
+				//s.updateContainerCustodian(stub, []string{contentID, ""})
+			} else if err == nil {
+				//claim product
+				contentState.Custodian = newCustodian
+				contentState.Location = newLocation
+				contentState.Timestamp = container.Timestamp
+				newProductBytes, _ := json.Marshal(contentState)
+				if err := stub.PutState(contentID, newProductBytes); err != nil {
+					return shim.Error(err.Error())
+				}
+			} else {
+				return shim.Error(err.Error())
+			}
+		}
 
-        s.logger.Infof("Updated state: %s\n", trackingID)
-        	return shim.Success([]byte(trackingID))
-    }
+		s.logger.Infof("Updated state: %s\n", trackingID)
+		return shim.Success([]byte(trackingID))
+	}
 	return recup(container)
 }
 
-//packageItem takes product/container and updates its containerID and takes a container and adds to its contents list
+// packageItem takes product/container and updates its containerID and takes a container and adds to its contents list
 func (s *SmartContract) packageItem(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//get user identity
 	identity, err := GetInvokerIdentity(stub)
@@ -306,12 +305,12 @@ func (s *SmartContract) packageItem(stub shim.ChaincodeStubInterface, args []str
 	containerID := args[0]
 	contentID := args[1]
 
-    if (containerID == contentID) {
-           return peer.Response{
-                    Status:  404,
-                    Message: fmt.Sprintf("Cannot package item into itself, please choose another container"),
-           }
-    }
+	if containerID == contentID {
+		return peer.Response{
+			Status:  404,
+			Message: fmt.Sprintf("Cannot package item into itself, please choose another container"),
+		}
+	}
 
 	containerBytes, _ := stub.GetState(containerID)
 	contentBytes, _ := stub.GetState(contentID)
@@ -334,55 +333,55 @@ func (s *SmartContract) packageItem(stub shim.ChaincodeStubInterface, args []str
 	var contentProduct Product
 	err = json.Unmarshal(contentBytes, &contentProduct)
 
-    if (err != nil && err.Error() == "Not a Product") {
-        //retry with container
-        var contentContainer Container
-        err = json.Unmarshal(contentBytes, &contentContainer)
-        if err != nil {
-            return shim.Error(err.Error())
-        }
-        if !(contentContainer.ContainerID == "") {
-            return peer.Response{
-                Status:  403,
-                Message: fmt.Sprintf("You are not authorized to perform this transaction as containerID is not empty for container"),
-            }
-        }
+	if err != nil && err.Error() == "Not a Product" {
+		//retry with container
+		var contentContainer Container
+		err = json.Unmarshal(contentBytes, &contentContainer)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+		if !(contentContainer.ContainerID == "") {
+			return peer.Response{
+				Status:  403,
+				Message: fmt.Sprintf("You are not authorized to perform this transaction as containerID is not empty for container"),
+			}
+		}
 
-        if !(identity.Cert.Subject.String() == contentContainer.Custodian) {
-            return peer.Response{
-                Status:  403,
-                Message: fmt.Sprintf("You are not authorized to perform this transaction as cert.subject.string doesn't equal custodian for container "),
-            }
-        }
-        //set new data
-        contentContainer.ContainerID = containerID
+		if !(identity.Cert.Subject.String() == contentContainer.Custodian) {
+			return peer.Response{
+				Status:  403,
+				Message: fmt.Sprintf("You are not authorized to perform this transaction as cert.subject.string doesn't equal custodian for container "),
+			}
+		}
+		//set new data
+		contentContainer.ContainerID = containerID
 
-        updatedContentBytes, _ = json.Marshal(contentContainer)
+		updatedContentBytes, _ = json.Marshal(contentContainer)
 
-    }else if (err != nil) {
-        return peer.Response{
-                        Status:  403,
-                        Message: fmt.Sprintf(err.Error()),
-                    }
-    }else {
-        if !(identity.Cert.Subject.String() == contentProduct.Custodian) {
-            return peer.Response{
-                Status:  403,
-                Message: fmt.Sprintf("You are not authorized to perform this transaction as cert.subject.string doesn't equal custodian for product while packaging"),
-            }
-        }
-        if !(contentProduct.ContainerID == "") {
-            return peer.Response{
-                Status:  403,
-                Message: fmt.Sprintf("You are not authorized to perform this transaction as containerID is not empty for product"),
-            }
-        }
-        //set new data
-        contentProduct.ContainerID = containerID
+	} else if err != nil {
+		return peer.Response{
+			Status:  403,
+			Message: fmt.Sprintf(err.Error()),
+		}
+	} else {
+		if !(identity.Cert.Subject.String() == contentProduct.Custodian) {
+			return peer.Response{
+				Status:  403,
+				Message: fmt.Sprintf("You are not authorized to perform this transaction as cert.subject.string doesn't equal custodian for product while packaging"),
+			}
+		}
+		if !(contentProduct.ContainerID == "") {
+			return peer.Response{
+				Status:  403,
+				Message: fmt.Sprintf("You are not authorized to perform this transaction as containerID is not empty for product"),
+			}
+		}
+		//set new data
+		contentProduct.ContainerID = containerID
 
-        updatedContentBytes, _ = json.Marshal(contentProduct)
+		updatedContentBytes, _ = json.Marshal(contentProduct)
 
-    }
+	}
 
 	//update container contents
 	var container Container
@@ -409,7 +408,7 @@ func (s *SmartContract) packageItem(stub shim.ChaincodeStubInterface, args []str
 
 }
 
-//packageItem takes product/container and updates its containerID and takes a container and adds to its contents list
+// packageItem takes product/container and updates its containerID and takes a container and adds to its contents list
 func (s *SmartContract) unpackageItem(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//get user identity
 	identity, err := GetInvokerIdentity(stub)
