@@ -12,7 +12,6 @@ rest-server/dist/
 
 fabric-dev-network/
 
-chaincode*/**/vendor/*
 chaincode/**/cmd/cmd
 
 **/node_modules/
