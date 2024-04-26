@@ -13,7 +13,7 @@ import (
 
 	"github.com/franela/goblin"
 	"github.com/golang/protobuf/proto"
-	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
 	"github.com/hyperledger/fabric/protos/msp"
 	. "github.com/onsi/gomega"
 )
@@ -470,7 +470,7 @@ func TestContainer(t *testing.T) {
 					ID:           "0d15d7b8-caaa-468d-8b83-aae049b40f46",
 					Type:         "container",
 					Health:       "None",
-					Contents:     []string{"2d15d7b8-caaa-468d-8b83-aae049b40f46","1d15d7b8-caaa-468d-8b83-aae049b40f46"},
+					Contents:     []string{"2d15d7b8-caaa-468d-8b83-aae049b40f46", "1d15d7b8-caaa-468d-8b83-aae049b40f46"},
 					Metadata:     map[string]interface{}{"name": "Not Expensive Dextrose"},
 					Custodian:    "OU=Carrier,O=PartyB,L=51.50/-0.13/London,C=US",
 					Location:     "None",
@@ -480,19 +480,19 @@ func TestContainer(t *testing.T) {
 				}
 
 				product := Product{
-                	ID:           "1d15d7b8-caaa-468d-8b83-aae049b40f46",
-                	Type:         "product",
-                	Name:         "Dextrose",
-                	Health:       "None",
-                	Sold:         false,
-                	Recalled:     false,
-                	ContainerID:  "0d15d7b8-caaa-468d-8b83-aae049b40f46",
-                	Metadata:     map[string]interface{}{"name": "Expensive Dextrose"},
-                	Custodian:    "OU=Carrier,O=PartyB,L=51.50/-0.13/London,C=US",
-                	Location:     "None",
-                	Timestamp:    1552583510960,
-                	Participants: []string{"OU=Carrier,O=PartyB,L=51.50/-0.13/London,C=US", "OU=Warehouse,O=PartyC,L=42.36/-71.06/Boston,C=US", "OU=Store,O=PartyD,L=40.73/-74/New York,C=US", "CN=User1@manufacturer-net,OU=user+OU=Manufacturer,O=PartyA,L=47.38/8.54/Zurich,C=CH"},
-                }
+					ID:           "1d15d7b8-caaa-468d-8b83-aae049b40f46",
+					Type:         "product",
+					Name:         "Dextrose",
+					Health:       "None",
+					Sold:         false,
+					Recalled:     false,
+					ContainerID:  "0d15d7b8-caaa-468d-8b83-aae049b40f46",
+					Metadata:     map[string]interface{}{"name": "Expensive Dextrose"},
+					Custodian:    "OU=Carrier,O=PartyB,L=51.50/-0.13/London,C=US",
+					Location:     "None",
+					Timestamp:    1552583510960,
+					Participants: []string{"OU=Carrier,O=PartyB,L=51.50/-0.13/London,C=US", "OU=Warehouse,O=PartyC,L=42.36/-71.06/Boston,C=US", "OU=Store,O=PartyD,L=40.73/-74/New York,C=US", "CN=User1@manufacturer-net,OU=user+OU=Manufacturer,O=PartyA,L=47.38/8.54/Zurich,C=CH"},
+				}
 
 				containerInner := Container{
 					ID:           "2d15d7b8-caaa-468d-8b83-aae049b40f46",

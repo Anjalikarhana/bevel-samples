@@ -4,8 +4,9 @@ import (
 	"crypto/x509"
 	"fmt"
 
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/hyperledger/fabric/core/chaincode/shim/ext/cid"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+
+	"github.com/hyperledger/fabric-chaincode-go/shim/ext/cid"
 )
 
 // Identity encapsulates a chaincode invokers identity

@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	. "github.com/chaincode/common"
 
-	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
 	"github.com/hyperledger/fabric/protos/peer"
 )
 
@@ -80,7 +81,7 @@ func (s *SmartContract) createProduct(stub shim.ChaincodeStubInterface, args []s
 	return shim.Success(bytes)
 }
 
-//getAllProducts retrieves all products on the ledger
+// getAllProducts retrieves all products on the ledger
 func (s *SmartContract) getAllProducts(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//Get user identity
 	identity, err := GetInvokerIdentity(stub)
@@ -126,7 +127,7 @@ func (s *SmartContract) getAllProducts(stub shim.ChaincodeStubInterface, args []
 	return shim.Success(buffer.Bytes())
 }
 
-//getSingleProducts retrieves all products on the ledger
+// getSingleProducts retrieves all products on the ledger
 func (s *SmartContract) getSingleProduct(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//get user identity
 	identity, err := GetInvokerIdentity(stub)
@@ -170,7 +171,7 @@ func (s *SmartContract) getSingleProduct(stub shim.ChaincodeStubInterface, args 
 	return shim.Success(productAsBytes)
 }
 
-//getContainerlessProducts retrieves all products on the ledger where containerID is empty
+// getContainerlessProducts retrieves all products on the ledger where containerID is empty
 func (s *SmartContract) getContainerlessProducts(stub shim.ChaincodeStubInterface) peer.Response {
 	//Get user identity
 	identity, err := GetInvokerIdentity(stub)
@@ -216,7 +217,7 @@ func (s *SmartContract) getContainerlessProducts(stub shim.ChaincodeStubInterfac
 	return shim.Success(buffer.Bytes())
 }
 
-//updateCustodian claims current user as the custodian
+// updateCustodian claims current user as the custodian
 func (s *SmartContract) updateProductCustodian(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//get user identity
 	identity, err := GetInvokerIdentity(stub)
