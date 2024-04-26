@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	. "github.com/chaincode/common"
 
-	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
 	"github.com/hyperledger/fabric/protos/peer"
 )
 
-//updateState takes health and misc data and allows a user to update the trackingID
+// updateState takes health and misc data and allows a user to update the trackingID
 func (s *SmartContract) updateState(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//get user identity
 	identity, err := GetInvokerIdentity(stub)
@@ -87,7 +88,7 @@ func (s *SmartContract) updateState(stub shim.ChaincodeStubInterface, args []str
 	return shim.Success([]byte(args[0]))
 }
 
-//scan checks to see if state exists and whether it is owned by the current identity
+// scan checks to see if state exists and whether it is owned by the current identity
 func (s *SmartContract) scan(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	//get user identity
 	identity, err := GetInvokerIdentity(stub)
@@ -152,7 +153,7 @@ func (s *SmartContract) getIdentity(stub shim.ChaincodeStubInterface) peer.Respo
 	return shim.Success(bytes)
 }
 
-//getHistory retrieves single items hsitory on the ledger
+// getHistory retrieves single items hsitory on the ledger
 func (s *SmartContract) getHistory(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) != 1 {
@@ -192,7 +193,7 @@ func (s *SmartContract) getHistory(stub shim.ChaincodeStubInterface, args []stri
 	return shim.Success(buffer.Bytes())
 }
 
-//helper to check if in history
+// helper to check if in history
 func isInHistory(list []History, item History) bool {
 	for _, v := range list {
 		if v == item {
