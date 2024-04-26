@@ -14,7 +14,6 @@ import (
 	"github.com/franela/goblin"
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric-chaincode-go/shim"
-	"github.com/hyperledger/fabric/protos/msp"
 	. "github.com/onsi/gomega"
 )
 
