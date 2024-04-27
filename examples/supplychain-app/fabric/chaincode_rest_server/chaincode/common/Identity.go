@@ -5,8 +5,6 @@ import (
 	"fmt"
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
-
-	"github.com/hyperledger/fabric-chaincode-go/shim/ext/cid"
 )
 
 // Identity encapsulates a chaincode invokers identity

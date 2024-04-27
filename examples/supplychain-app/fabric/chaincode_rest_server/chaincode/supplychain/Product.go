@@ -8,7 +8,7 @@ import (
 	. "github.com/chaincode/common"
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
-	"github.com/hyperledger/fabric/protos/peer"
+	pb "github.com/hyperledger/fabric-protos-go/peer"
 )
 
 // createProduct creates a new Product on the blockchain using the  with the supplied ID

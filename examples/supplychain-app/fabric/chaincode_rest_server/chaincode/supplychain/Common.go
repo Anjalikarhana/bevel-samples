@@ -8,7 +8,7 @@ import (
 	. "github.com/chaincode/common"
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
-	"github.com/hyperledger/fabric/protos/peer"
+	pb "github.com/hyperledger/fabric-protos-go/peer"
 )
 
 // updateState takes health and misc data and allows a user to update the trackingID
