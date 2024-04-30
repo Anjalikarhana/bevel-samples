@@ -6,7 +6,7 @@ import (
 
 	"github.com/hyperledger/fabric-chaincode-go/pkg/cid"
 
-	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
 // Identity encapsulates a chaincode invokers identity

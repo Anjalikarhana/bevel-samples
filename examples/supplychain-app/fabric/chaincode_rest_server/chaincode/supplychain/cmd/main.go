@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"github.com/hyperledger/fabric/core/chaincode/shim"
 
 	supplychain "github.com/chaincode/supplychain"
 )

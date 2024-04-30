@@ -7,8 +7,8 @@ import (
 
 	. "github.com/chaincode/common"
 
-	"github.com/hyperledger/fabric-chaincode-go/shim"
-	pb "github.com/hyperledger/fabric-protos-go/peer"
+	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric-protos-go/peer"
 )
 
 // createContainer creates a new Container on the blockchain using the request body with the supplied ID

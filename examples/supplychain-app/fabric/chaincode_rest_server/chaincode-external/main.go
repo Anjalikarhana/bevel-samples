@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
 type serverConfig struct {

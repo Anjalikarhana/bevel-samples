@@ -35,7 +35,7 @@ Here is a high-level description of the Supply Chain application:
 ## Installing the development environment
 ### Requirements
 
-- Go 1.11.x
+-  1.11.x
 - [Dep](https://golang.github.io/dep/docs/installation.html)
 
 
