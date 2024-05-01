@@ -1,56 +1,51 @@
 package main
 
 import (
-    "fmt"
-    "log"
 	"encoding/json"
+	"fmt"
+	"log"
 
-    "github.com/hyperledger/fabric-contract-api-go/contractapi"
+	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
 // User represents a user in the ledger.
 type User struct {
-    ID     string `json:"id"`
-    Name   string `json:"name"`
-    Amount int    `json:"amount"`
+	ID     string `json:"id"`
+	Name   string `json:"name"`
+	Amount int    `json:"amount"`
 }
 
-// EventContract defines the chaincode structure.
-type EventContract struct {
-    contractapi.Contract
+// EventChaincode implements the Chaincode interface.
+type EventChaincode struct{}
+
+func (cc *EventChaincode) Init(stub shim.ChaincodeStubInterface) ([]byte, error) {
+	users := []User{
+		{ID: "user1", Name: "Alice", Amount: 100},
+		{ID: "user2", Name: "Bob", Amount: 200},
+	}
+
+	for _, user := range users {
+		userBytes, err := json.Marshal(user)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal user %s: %v", user.ID, err)
+		}
+		err = stub.PutState(user.ID, userBytes)
+		if err != nil {
+			return nil, fmt.Errorf("failed to put user %s: %v", user.ID, err)
+		}
+	}
+
+	return nil, nil
 }
 
-
-
-// Init initializes the ledger with some sample users.
-func (ec *EventContract) Init(ctx contractapi.TransactionContextInterface) error {
-    users := []User{
-        {ID: "user1", Name: "Alice", Amount: 100},
-        {ID: "user2", Name: "Bob", Amount: 200},
-    }
-
-    for _, user := range users {
-        err := ctx.GetStub().PutState(user.ID, userToBytes(&user))
-        if err != nil {
-            return fmt.Errorf("failed to put user %s: %v", user.ID, err)
-        }
-    }
-
-    return nil
-}
-
-func userToBytes(user *User) []byte {
-    userBytes, _ := json.Marshal(user)
-    return userBytes
+func (cc *EventChaincode) Invoke(stub shim.ChaincodeStubInterface) ([]byte, error) {
+	
+	return nil, nil
 }
 
 func main() {
-    cc, err := contractapi.NewChaincode(new(EventContract))
-    if err != nil {
-        log.Panicf("Error creating Event chaincode: %v", err)
-    }
-
-    if err := cc.Start(); err != nil {
-        log.Panicf("Error starting Event chaincode: %v", err)
-    }
+	err := shim.Start(new(EventChaincode))
+	if err != nil {
+		log.Panicf("Error starting Event chaincode: %v", err)
+	}
 }
